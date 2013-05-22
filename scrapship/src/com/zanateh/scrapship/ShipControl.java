@@ -2,6 +2,8 @@ package com.zanateh.scrapship;
 
 import java.util.ArrayList;
 
+import com.zanateh.scrapship.state.PlayStateInputProcessor;
+
 public class ShipControl {
 	
 	private float forwardThrust = 0;
@@ -12,6 +14,17 @@ public class ShipControl {
 	public ArrayList<IThrust> leftThrusters = new ArrayList<IThrust>();
 	private float rightThrust = 0;
 	public ArrayList<IThrust> rightThrusters = new ArrayList<IThrust>();
+	
+	PlayStateInputProcessor inputProcessor;
+	
+	public void setInputProcessor(PlayStateInputProcessor inputProcessor ) {
+		if( this.inputProcessor != null ) {
+			PlayStateInputProcessor tmpProcessor = this.inputProcessor;
+			this.inputProcessor = null;
+			tmpProcessor.removeShipControl(this);	
+		}
+		this.inputProcessor = inputProcessor;
+	}
 	
 	public void setForwardThrust(float thrust) {
 		forwardThrust = thrust;
@@ -48,4 +61,12 @@ public class ShipControl {
 		rightThrusters.clear();
 	}
 	
+	public void dispose() {
+		remove();
+		if(inputProcessor != null) {
+			PlayStateInputProcessor tmpProcessor = this.inputProcessor;
+			this.inputProcessor = null;
+			tmpProcessor.removeShipControl(this);	
+		}
+	}
 }

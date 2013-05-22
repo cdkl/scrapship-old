@@ -36,6 +36,8 @@ public class Ship {
 		BodyDef def = new BodyDef();
 		def.position.set(0,0);
 		def.type = BodyDef.BodyType.DynamicBody;
+		def.angularDamping = 0.8f;
+		def.linearDamping = 0.2f;
 		
 		body = world.createBody(def);
 		FixtureDef fixDef = new FixtureDef();
@@ -60,15 +62,18 @@ public class Ship {
 		engines.add(mainEngine);
 		revEngine = new BasicThruster(new Vector2(0,0), new Vector2(-1,0), enginePower * 0.4f);
 		engines.add(revEngine);
-		leftEngine = new BasicThruster(new Vector2(0.5f,0), new Vector2(0,-1), enginePower * 0.2f);
+		leftEngine = new BasicThruster(new Vector2(0.5f,0), new Vector2(0,1), enginePower * 0.2f);
 		engines.add(leftEngine);
-		rightEngine = new BasicThruster(new Vector2(0.5f,0), new Vector2(0,1), enginePower * 0.2f);
+		rightEngine = new BasicThruster(new Vector2(0.5f,0), new Vector2(0,-1), enginePower * 0.2f);
 		engines.add(rightEngine);
 		
 	}
 
 	public void dispose() {
 		shipImage.dispose();
+		if(control != null) {
+			control.dispose();
+		}
 	}
 
 	public void update() {

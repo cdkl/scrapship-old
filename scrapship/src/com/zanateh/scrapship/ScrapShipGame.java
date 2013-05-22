@@ -19,64 +19,38 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.zanateh.scrapship.state.GameState;
+import com.zanateh.scrapship.state.InitState;
+import com.zanateh.scrapship.state.PlayState;
 
 public class ScrapShipGame implements ApplicationListener {
 	private OrthographicCamera camera;
+	public OrthographicCamera getCamera() { return camera; }
+	
 	private SpriteBatch batch;
+	public SpriteBatch getSpriteBatch() { return batch; }
+	
 		
 	float updateFrame = 1.0f/60.0f;
 	public float getUpdateFrame() { return updateFrame; }
 	float leftoverRender = 0.0f;
 	
-	private World world;
-	public World getWorld() { return world; }
-	
-	ArrayList<Ship> shipList = new ArrayList<Ship>();
-	
-	// Debug display stuff for box2d
-	private Matrix4 debugMatrix;
-	Box2DDebugRenderer debugRenderer;
-	boolean debugRender = false;
+	GameState state;
 	
 	@Override
 	public void create() {		
-		ScrapInputProcessor inputProcessor = new ScrapInputProcessor(this);
-		Gdx.input.setInputProcessor(inputProcessor);
-		
-		float w = Gdx.graphics.getWidth();
-		float h = Gdx.graphics.getHeight();
-		
+	
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 10, 7);
 		batch = new SpriteBatch();
 	
-		world = new World(new Vector2(0,0.0f), false);
-		debugRenderer = new Box2DDebugRenderer();
-		
-		
-		Ship ship1 = new Ship(world);
-		ship1.setPosition(new Vector2(0.5f,3.5f));
-		ship1.setVelocity(new Vector2(1,0));
-		shipList.add(ship1);
-		Ship ship2 = new Ship(world);
-		ship2.setPosition(new Vector2(8,4.4f));
-		ship2.setVelocity(new Vector2(-1,0));
-		shipList.add(ship2);
-		
-		ShipControl control = new ShipControl();
-		inputProcessor.setShipControl(control);
-		ship1.setShipControl(control);
+		changeState(new InitState());
 	}
 
 	@Override
 	public void dispose() {
 		batch.dispose();
-		world.dispose();
-
-		for(Ship ship : shipList)
-		{
-			ship.dispose();
-		}
+		state.Cleanup();
 	}
 
 	@Override
@@ -89,33 +63,17 @@ public class ScrapShipGame implements ApplicationListener {
 		}
 		
 		leftoverRender = deltaTime;
-		
-		Gdx.gl.glClearColor(1, 1, 1, 1);
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
-		camera.update();
-		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
-		for(Ship ship : shipList ) {
-			ship.draw(batch);
+		if(state != null) {
+			state.Draw(this);
 		}
-
-		if(debugRender) {
-			debugMatrix = new Matrix4(camera.combined);
-			debugRenderer.render(world,  debugMatrix);
-		}
-		batch.end();
-		
 	}
 
 	public void update()
 	{
-		for(Ship ship : shipList ) {
-			ship.update();
+		if(state != null) {
+			state.Update(this);
 		}
-
-		world.step(updateFrame,7,3);
-		world.clearForces();
 	}
 	
 	@Override
@@ -130,7 +88,12 @@ public class ScrapShipGame implements ApplicationListener {
 	public void resume() {
 	}
 
-	public void toggleDebugRender() {
-		debugRender =! debugRender;
+	public void changeState(GameState state) {
+		if(this.state != null) {
+			this.state.Cleanup();
+		}
+		
+		this.state = state;
+		this.state.Init(this);		
 	}
 }

@@ -9,8 +9,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.zanateh.scrapship.ScrapShipGame;
-import com.zanateh.scrapship.Ship;
-import com.zanateh.scrapship.ShipControl;
+import com.zanateh.scrapship.ship.IShip;
+import com.zanateh.scrapship.ship.Ship;
+import com.zanateh.scrapship.ship.ShipControl;
 
 public class PlayState extends GameState {
 
@@ -20,7 +21,7 @@ public class PlayState extends GameState {
 	private Matrix4 debugMatrix;
 	Box2DDebugRenderer debugRenderer;
 
-	ArrayList<Ship> shipList = new ArrayList<Ship>();
+	ArrayList<IShip> shipList = new ArrayList<IShip>();
 	
 	PlayStateInputProcessor inputProcessor;
 	
@@ -57,7 +58,7 @@ public class PlayState extends GameState {
 		// TODO Auto-generated method stub
 		world.dispose();
 
-		for(Ship ship : shipList)
+		for(IShip ship : shipList)
 		{
 			ship.dispose();
 		}
@@ -86,7 +87,7 @@ public class PlayState extends GameState {
 
 	@Override
 	public void Update(ScrapShipGame game) {
-		for(Ship ship : shipList ) {
+		for(IShip ship : shipList ) {
 			ship.update();
 		}
 
@@ -103,14 +104,13 @@ public class PlayState extends GameState {
 		game.getSpriteBatch().setProjectionMatrix(game.getCamera().combined);
 		game.getSpriteBatch().begin();
 		
+		for(IShip ship : shipList ) {
+			ship.draw(game.getSpriteBatch());
+		}
 		if(getDebugRender()) {
+			game.getSpriteBatch().flush();
 			debugMatrix = new Matrix4(game.getCamera().combined);
 			debugRenderer.render(world,  debugMatrix);
-		}
-
-		
-		for(Ship ship : shipList ) {
-			ship.draw(game.getSpriteBatch());
 		}
 
 		game.getSpriteBatch().end();

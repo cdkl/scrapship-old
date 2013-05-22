@@ -1,4 +1,4 @@
-package com.zanateh.scrapship;
+package com.zanateh.scrapship.ship;
 
 import java.util.ArrayList;
 

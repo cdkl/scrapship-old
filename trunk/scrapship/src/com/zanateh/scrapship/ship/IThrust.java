@@ -1,4 +1,4 @@
-package com.zanateh.scrapship;
+package com.zanateh.scrapship.ship;
 
 import com.badlogic.gdx.physics.box2d.Body;
 

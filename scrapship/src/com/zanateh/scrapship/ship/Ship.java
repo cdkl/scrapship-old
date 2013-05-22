@@ -1,4 +1,4 @@
-package com.zanateh.scrapship;
+package com.zanateh.scrapship.ship;
 
 import java.util.ArrayList;
 
@@ -16,7 +16,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class Ship {
+public class Ship implements IShip {
 	public Body body;
 	
 	private Texture shipImage;
@@ -69,6 +69,10 @@ public class Ship {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.zanateh.scrapship.ship.IShip#dispose()
+	 */
+	@Override
 	public void dispose() {
 		shipImage.dispose();
 		if(control != null) {
@@ -76,12 +80,20 @@ public class Ship {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.zanateh.scrapship.ship.IShip#update()
+	 */
+	@Override
 	public void update() {
 		for( IThrust engine : engines ) {
 			engine.applyThrust(body);
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.zanateh.scrapship.ship.IShip#setShipControl(com.zanateh.scrapship.ship.ShipControl)
+	 */
+	@Override
 	public void setShipControl(ShipControl control) {
 		if( this.control != null ) {
 			removeControl();
@@ -94,11 +106,19 @@ public class Ship {
 		this.control.rightThrusters.add(rightEngine);
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.zanateh.scrapship.ship.IShip#removeControl()
+	 */
+	@Override
 	public void removeControl() {
 		this.control.remove();
 		this.control = null;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.zanateh.scrapship.ship.IShip#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)
+	 */
+	@Override
 	public void draw(SpriteBatch batch) {
 		// TODO Auto-generated method stub
 		sprite.setPosition(body.getPosition().x - (sprite.getWidth()/2), body.getPosition().y - (sprite.getHeight()/2));
@@ -106,10 +126,18 @@ public class Ship {
 		sprite.draw(batch);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.zanateh.scrapship.ship.IShip#setPosition(com.badlogic.gdx.math.Vector2)
+	 */
+	@Override
 	public void setPosition(Vector2 pos) {
 		body.setTransform(pos, 0);
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.zanateh.scrapship.ship.IShip#setVelocity(com.badlogic.gdx.math.Vector2)
+	 */
+	@Override
 	public void setVelocity(Vector2 vel) {
 		body.setLinearVelocity(vel);
 	}

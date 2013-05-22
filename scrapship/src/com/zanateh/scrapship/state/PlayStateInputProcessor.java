@@ -2,7 +2,7 @@ package com.zanateh.scrapship.state;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.zanateh.scrapship.ShipControl;
+import com.zanateh.scrapship.ship.ShipControl;
 
 public class PlayStateInputProcessor implements InputProcessor {
 

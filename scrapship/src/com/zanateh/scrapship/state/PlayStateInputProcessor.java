@@ -1,21 +1,22 @@
-package com.zanateh.scrapship;
+package com.zanateh.scrapship.state;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.zanateh.scrapship.ShipControl;
 
-public class ScrapInputProcessor implements InputProcessor {
+public class PlayStateInputProcessor implements InputProcessor {
 
-	ScrapShipGame game;
+	PlayState state;
 	ShipControl shipControl;
 	
-	public ScrapInputProcessor(ScrapShipGame game) {
-		this.game = game;
+	public PlayStateInputProcessor(PlayState game) {
+		this.state = game;
 	}
 	
 	@Override
 	public boolean keyDown(int keycode) {
 		if( keycode == Input.Keys.D ) {
-			game.toggleDebugRender();
+			state.toggleDebugRender();
 			return true;
 		}
 		
@@ -68,6 +69,10 @@ public class ScrapInputProcessor implements InputProcessor {
 
 	@Override
 	public boolean keyTyped(char character) {
+		if( character == '`') {
+			state.reset();
+			return true;
+		}
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -104,6 +109,13 @@ public class ScrapInputProcessor implements InputProcessor {
 
 	public void setShipControl(ShipControl shipControl) {
 		this.shipControl = shipControl;
+		this.shipControl.setInputProcessor(this);
+	}
+
+	public void removeShipControl(ShipControl shipControl) {
+		if(this.shipControl == shipControl) {
+			this.shipControl = null;
+		}
 	}
 
 }

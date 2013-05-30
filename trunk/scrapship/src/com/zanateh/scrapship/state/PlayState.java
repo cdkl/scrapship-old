@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.zanateh.scrapship.ScrapShipGame;
+import com.zanateh.scrapship.ship.ComponentShip;
 import com.zanateh.scrapship.ship.IShip;
 import com.zanateh.scrapship.ship.Ship;
 import com.zanateh.scrapship.ship.ShipControl;
@@ -39,11 +40,12 @@ public class PlayState extends GameState {
 		inputProcessor = new PlayStateInputProcessor(this);
 		Gdx.input.setInputProcessor(inputProcessor);
 		
-		Ship ship1 = new Ship(world);
+		IShip ship1 = new Ship(world);
 		ship1.setPosition(new Vector2(0.5f,3.5f));
 		ship1.setVelocity(new Vector2(1,0));
 		shipList.add(ship1);
-		Ship ship2 = new Ship(world);
+		
+		IShip ship2 = new ComponentShip(world);
 		ship2.setPosition(new Vector2(8,4.4f));
 		ship2.setVelocity(new Vector2(-1,0));
 		shipList.add(ship2);

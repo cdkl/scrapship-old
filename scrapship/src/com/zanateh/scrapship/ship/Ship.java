@@ -48,7 +48,7 @@ public class Ship implements IShip {
 		fixDef.restitution = 0.5f;
 		fixDef.friction = 0.2f;
 		body.createFixture(fixDef);
-//		polyShape.setAsBox(0.5f, 0.5f, new Vector2(0,0.75f), 0.1f);
+		polyShape.setAsBox(0.5f, 0.5f, new Vector2(0,0.75f), 0.1f);
 //		body.createFixture(fixDef);
 		//body.applyLinearImpulse(new Vector2(10,0), new Vector2(0,0.0f), true);
 		
@@ -140,6 +140,12 @@ public class Ship implements IShip {
 	@Override
 	public void setVelocity(Vector2 vel) {
 		body.setLinearVelocity(vel);
+	}
+
+	@Override
+	public Body getBody() {
+		// TODO Auto-generated method stub
+		return body;
 	}
 	
 

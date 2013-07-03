@@ -4,7 +4,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public interface IComponent {
 
-	void attach(IShip ship, float posx, float posy, float rad);
+	void attach(ComponentShip ship, float posx, float posy, float rad);
+	
+	void attachRelativeComponent(IComponent component, float offsetX, float offsetY, float rad);
 	
 	void draw(SpriteBatch batch);
 	

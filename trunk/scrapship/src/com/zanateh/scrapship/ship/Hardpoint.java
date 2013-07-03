@@ -29,31 +29,34 @@ public class Hardpoint {
 		rotatedRelativePosition.add(this.component.position);
 		
 		this.attached = hp;
-		this.attached.slaveAttach(this, rotatedRelativePosition);
-		
-		
-	}
-	
-	private void slaveAttach(Hardpoint hp, Vector2 rotatedRelativePosition) 
-	{
+
 		// Need to take the provided vector, 
 		// rotate our vector to match @ 180 degrees,
 		
 		float masterRotationDegrees = rotatedRelativePosition.angle();
-		float slaveRotationDegrees = this.position.angle();
+		float slaveRotationDegrees = hp.position.angle();
 		
 		float requiredRotationDegrees = 
 				(masterRotationDegrees - slaveRotationDegrees + 180) % 360;
 		
-		Vector2 newPosition = new Vector2(this.position);
+		Vector2 newPosition = new Vector2(hp.position);
 		newPosition.rotate(requiredRotationDegrees);
 		
 		Vector2 diff = new Vector2(rotatedRelativePosition);
 		diff.sub(newPosition);
 		
-	 	((ComponentShip)hp.component.getShip()).attachComponent(this.component, 
-	 			diff.x, diff.y, 
+		this.component.attachRelativeComponent(
+				hp.component,
+				diff.x, diff.y, 
 	 			requiredRotationDegrees * MathUtils.degreesToRadians);
+
+		this.attached.slaveAttach(this);
+		
+	}
+	
+	private void slaveAttach(Hardpoint hp) 
+	{
+		this.attached = hp;
 	}
 	
 	public void detach()

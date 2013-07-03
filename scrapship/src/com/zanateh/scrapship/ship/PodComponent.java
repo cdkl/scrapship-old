@@ -21,7 +21,7 @@ public class PodComponent implements IComponent {
 	Vector2 position;
 	
 	Fixture fixture = null;
-	IShip ship = null;
+	ComponentShip ship = null;
 	
 	private ArrayList<Hardpoint> hardpoints = new ArrayList<Hardpoint>();
 		
@@ -39,7 +39,7 @@ public class PodComponent implements IComponent {
 	}
 
 	@Override
-	public void attach(IShip ship, float posx, float posy, float rad) {
+	public void attach(ComponentShip ship, float posx, float posy, float rad) {
 		this.ship = ship;
 		Body shipBody = ship.getBody();
 		
@@ -66,7 +66,7 @@ public class PodComponent implements IComponent {
 	public void dispose() {
 	}
 	
-	public IShip getShip()
+	public ComponentShip getShip()
 	{
 		return ship;
 	}
@@ -79,6 +79,12 @@ public class PodComponent implements IComponent {
 
 	public Hardpoint getHardpoint(int index) {
 		return hardpoints.get(index);
+	}
+
+	@Override
+	public void attachRelativeComponent(IComponent component, float offsetX, float offsetY, float rad) {
+		this.ship.attachComponent(component, offsetX, offsetY, rad);
+		
 	}
 	
 }

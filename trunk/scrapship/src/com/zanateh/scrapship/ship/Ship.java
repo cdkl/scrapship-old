@@ -15,8 +15,9 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.zanateh.scrapship.camera.IHasPosition;
 
-public class Ship implements IShip {
+public class Ship implements IShip, IHasPosition {
 	public Body body;
 	
 	private Texture shipImage;
@@ -147,6 +148,13 @@ public class Ship implements IShip {
 		// TODO Auto-generated method stub
 		return body;
 	}
+
+	@Override
+	public Vector2 getPosition() {
+		// TODO Auto-generated method stub
+		return body.getTransform().getPosition();
+	}
+	
 	
 
 }

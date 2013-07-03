@@ -28,13 +28,15 @@ public class ComponentShip implements IShip {
 		
 		body = world.createBody(def);
 		
-		attachComponent(new PodComponent(), 0, 0, 0);
-		attachComponent(new PodComponent(), 1, 0, MathUtils.PI);
-		attachComponent(new PodComponent(), 0, 1, MathUtils.PI/2);
-		attachComponent(new PodComponent(), 0, 2, MathUtils.PI*1.5f);
+		
+		
+//		attachComponent(new PodComponent(), 0, 0, 0);
+//		attachComponent(new PodComponent(), 1, 0, MathUtils.PI);
+//		attachComponent(new PodComponent(), 0, 1, MathUtils.PI/2);
+//		attachComponent(new PodComponent(), 0, 2, MathUtils.PI*1.5f);
 	}
 	
-	private void attachComponent(IComponent component, float x, float y, float rad) {
+	public void attachComponent(IComponent component, float x, float y, float rad) {
 		component.attach(this, x, y, rad);
 		components.add(component);
 	}

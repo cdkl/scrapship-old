@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.zanateh.scrapship.ScrapShipGame;
 import com.zanateh.scrapship.ship.ComponentShip;
+import com.zanateh.scrapship.ship.ComponentShipFactory;
 import com.zanateh.scrapship.ship.IShip;
 import com.zanateh.scrapship.ship.Ship;
 import com.zanateh.scrapship.ship.ShipControl;
@@ -45,7 +46,8 @@ public class PlayState extends GameState {
 		ship1.setVelocity(new Vector2(1,0));
 		shipList.add(ship1);
 		
-		IShip ship2 = new ComponentShip(world);
+		IShip ship2 = ComponentShipFactory.createShip(
+				ComponentShipFactory.ShipType.DebugShip, world);
 		ship2.setPosition(new Vector2(8,4.4f));
 		ship2.setVelocity(new Vector2(-1,0));
 		shipList.add(ship2);

@@ -1,5 +1,7 @@
 package com.zanateh.scrapship.ship;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -19,6 +21,9 @@ public class PodComponent implements IComponent {
 	Vector2 position;
 	
 	Fixture fixture = null;
+	IShip ship = null;
+	
+	private ArrayList<Hardpoint> hardpoints = new ArrayList<Hardpoint>();
 		
 	@Override
 	public void draw(SpriteBatch batch) {
@@ -35,6 +40,7 @@ public class PodComponent implements IComponent {
 
 	@Override
 	public void attach(IShip ship, float posx, float posy, float rad) {
+		this.ship = ship;
 		Body shipBody = ship.getBody();
 		
 		FixtureDef fixDef = new FixtureDef();
@@ -60,7 +66,19 @@ public class PodComponent implements IComponent {
 	public void dispose() {
 	}
 	
+	public IShip getShip()
+	{
+		return ship;
+	}
 	
+	public void addHardpoint(Vector2 pos)
+	{
+		Hardpoint hp = new Hardpoint(this, pos);
+		hardpoints.add(hp);
+	}
 
-
+	public Hardpoint getHardpoint(int index) {
+		return hardpoints.get(index);
+	}
+	
 }

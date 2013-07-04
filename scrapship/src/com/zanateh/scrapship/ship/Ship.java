@@ -49,7 +49,6 @@ public class Ship implements IShip, IHasPosition {
 		fixDef.restitution = 0.5f;
 		fixDef.friction = 0.2f;
 		body.createFixture(fixDef);
-		polyShape.setAsBox(0.5f, 0.5f, new Vector2(0,0.75f), 0.1f);
 //		body.createFixture(fixDef);
 		//body.applyLinearImpulse(new Vector2(10,0), new Vector2(0,0.0f), true);
 		
@@ -59,9 +58,9 @@ public class Ship implements IShip, IHasPosition {
 		sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
 		
 		float enginePower = 5;
-		mainEngine = new BasicThruster(new Vector2(0,0), new Vector2(1,0), enginePower * 1f );
+		mainEngine = new BasicThruster(new Vector2(-0.5f,0), new Vector2(1,0), enginePower * 1f );
 		engines.add(mainEngine);
-		revEngine = new BasicThruster(new Vector2(0,0), new Vector2(-1,0), enginePower * 0.4f);
+		revEngine = new BasicThruster(new Vector2(0.5f,0), new Vector2(-1,0), enginePower * 0.4f);
 		engines.add(revEngine);
 		leftEngine = new BasicThruster(new Vector2(0.5f,0), new Vector2(0,1), enginePower * 0.2f);
 		engines.add(leftEngine);
@@ -125,6 +124,15 @@ public class Ship implements IShip, IHasPosition {
 		sprite.setPosition(body.getPosition().x - (sprite.getWidth()/2), body.getPosition().y - (sprite.getHeight()/2));
 		sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
 		sprite.draw(batch);
+		
+		Vector2 parentPos = body.getPosition();
+		float parentRotationDeg = body.getAngle() * MathUtils.radiansToDegrees;
+		
+		for( IThrust engine : engines ) {
+			if( engine instanceof BasicThruster ) {
+				((BasicThruster) engine).draw(batch, parentPos, parentRotationDeg);
+			}
+		}
 	}
 
 	/* (non-Javadoc)

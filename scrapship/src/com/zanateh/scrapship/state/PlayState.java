@@ -107,7 +107,7 @@ public class PlayState extends GameState {
 
 	@Override
 	public void Draw(ScrapShipGame game) {
-		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
 		cameraManager.setupRenderCamera(game);

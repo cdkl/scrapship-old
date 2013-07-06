@@ -6,12 +6,11 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.zanateh.scrapship.scene.ScrapShipActor;
 import com.zanateh.scrapship.ship.IThrust;
 
-public class ComponentThruster implements IThrust {
+public class ComponentThruster extends ScrapShipActor implements IThrust {
 
-	// Position of thruster on component
-	Vector2 pos;
 	// direction of acceleration (NOT the direction of "Thrust")
 	Vector2 vec;
 	// Strength of thruster
@@ -25,7 +24,8 @@ public class ComponentThruster implements IThrust {
 	
 	public ComponentThruster(PodComponent component, Vector2 pos, Vector2 vec, float strength) {
 		this.component = component;
-		this.pos = new Vector2(pos);
+		this.setPosition(pos.x, pos.y);
+		
 		this.vec = new Vector2(vec);
 		this.strength = strength;
 		this.power = 0;
@@ -40,38 +40,47 @@ public class ComponentThruster implements IThrust {
 		power = thrust;
 	}
 
-	public void update() {
+	public void act(float delta) {
+		super.act(delta);
 		Body body = component.getFixture().getBody();
 		applyThrust(body);
 	}
 	
+	public Vector2 getPosition() {
+		return new Vector2(this.getX(), this.getY());
+	}
+	
 	@Override 
 	public void applyThrust(Body body) {		
-		Vector2 shipPos = new Vector2(pos);
-		component.transformPositionToParent(pos);
+		Vector2 shipPos = new Vector2(this.getPosition());
+		component.transformPositionToParent(this.getPosition());
 		Vector2 shipVec = new Vector2(vec);
 		component.transformVectorToParent(shipVec);
 		
 		body.applyForce(body.getWorldVector(shipVec.scl(strength*power)), body.getWorldPoint(shipPos), true);
 	}
 	
-	public void draw(SpriteBatch batch, Vector2 parentPos, float parentRotationDeg) {
+	public void draw(SpriteBatch batch, float parentAlpha) {
+		super.draw(batch, parentAlpha);
+	
 		if( power > 0 ) {
 			Vector2 spriteRenderOffset = new Vector2(sprite.getWidth(), sprite.getHeight()/2);
 			Vector2 spriteVec = new Vector2(vec);
 			component.transformVectorToParent(spriteVec);
 			spriteRenderOffset.rotate(spriteVec.angle() + 180);
 					
-			Vector2 spritePos = new Vector2(pos);
+			Vector2 spritePos = new Vector2(getPosition());
 			spritePos.add(spriteRenderOffset);
-			spritePos.rotate(parentRotationDeg);
-			spritePos.add(parentPos);		
 			sprite.setPosition(spritePos.x, spritePos.y);
 			
-			float rotation = parentRotationDeg + spriteVec.angle();
+			float rotation = spriteVec.angle();
 			sprite.setRotation(rotation);
 			sprite.draw(batch);
 		}
+	}
+
+	@Override
+	public void postUpdate() {
 	}
 	
 	

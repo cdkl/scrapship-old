@@ -11,18 +11,17 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.zanateh.scrapship.ScrapShipGame;
 import com.zanateh.scrapship.camera.CameraManager;
+import com.zanateh.scrapship.scene.ScrapShipStage;
 import com.zanateh.scrapship.ship.ComponentShip;
 import com.zanateh.scrapship.ship.ComponentShipFactory;
-import com.zanateh.scrapship.ship.IShip;
 import com.zanateh.scrapship.ship.ShipControl;
 
 public class PlayState extends GameState {
 
 	private World world;
+	PlayStateInputProcessor stage;
 	
-	ArrayList<IShip> shipList = new ArrayList<IShip>();
-	
-	PlayStateInputProcessor inputProcessor;
+	ArrayList<ComponentShip> shipList = new ArrayList<ComponentShip>();
 	
 	CameraManager cameraManager = new CameraManager();
 	
@@ -32,26 +31,26 @@ public class PlayState extends GameState {
 		super.Init(game);
 
 		world = new World(new Vector2(0,0.0f), false);
-
-		inputProcessor = new PlayStateInputProcessor();
-		inputProcessor.setCameraManager(cameraManager);
-		Gdx.input.setInputProcessor(inputProcessor);
+		stage = new PlayStateInputProcessor(this, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, game.getSpriteBatch());
+		stage.setCamera(game.getCamera());
+		stage.setCameraManager(cameraManager);
+		Gdx.input.setInputProcessor(stage);
 		
 		ComponentShip ship1 = ComponentShipFactory.createShip(
-				ComponentShipFactory.ShipType.PlayerShip, world);
+				ComponentShipFactory.ShipType.PlayerShip, world, stage);
 		ship1.setPosition(new Vector2(0.5f,3.5f));
 		ship1.setVelocity(new Vector2(1,0));
 		shipList.add(ship1);
 		cameraManager.setCameraMode(CameraManager.CameraMode.Target);
 		cameraManager.setTarget(ship1);		
 		
-		IShip ship2 = ComponentShipFactory.createShip(
-				ComponentShipFactory.ShipType.DebugShip, world);
+		ComponentShip ship2 = ComponentShipFactory.createShip(
+				ComponentShipFactory.ShipType.DebugShip, world, stage);
 		ship2.setPosition(new Vector2(8,4.4f));
 		ship2.setVelocity(new Vector2(-1,0));
 		shipList.add(ship2);
 		
-		inputProcessor.setShipControl(ship1.getShipControl());
+		stage.setShipControl(ship1.getShipControl());
 	}
 
 	@Override
@@ -59,7 +58,7 @@ public class PlayState extends GameState {
 		// TODO Auto-generated method stub
 		world.dispose();
 
-		for(IShip ship : shipList)
+		for(ComponentShip ship : shipList)
 		{
 			ship.dispose();
 		}
@@ -88,12 +87,12 @@ public class PlayState extends GameState {
 
 	@Override
 	public void Update(ScrapShipGame game) {
-		for(IShip ship : shipList ) {
-			ship.update();
-		}
-
+		stage.act(game.getUpdateFrame());
+	
 		world.step(game.getUpdateFrame(),7,3);
-		world.clearForces();
+
+		stage.postUpdate();
+		
 	}
 
 	@Override
@@ -103,10 +102,8 @@ public class PlayState extends GameState {
 
 		cameraManager.setupRenderCamera(game);
 		
-		for(IShip ship : shipList ) {
-			ship.draw(game.getSpriteBatch());
-		}
-
+		stage.draw();
+		
 		cameraManager.finalizeRender(game, world);
 	}
 

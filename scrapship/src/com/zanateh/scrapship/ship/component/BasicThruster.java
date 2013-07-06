@@ -1,4 +1,4 @@
-package com.zanateh.scrapship.ship;
+package com.zanateh.scrapship.ship.component;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.zanateh.scrapship.ship.IThrust;
 
 public class BasicThruster implements IThrust {
 

@@ -1,4 +1,4 @@
-package com.zanateh.scrapship.ship;
+package com.zanateh.scrapship.ship.component;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -25,7 +25,7 @@ public class Hardpoint {
 	
 		// Vector of hardpoint to origin
 		Vector2 rotatedRelativePosition = new Vector2(position);
-		rotatedRelativePosition.rotate(this.component.rotation * MathUtils.radiansToDegrees);
+		rotatedRelativePosition.rotate(this.component.rotation);
 		rotatedRelativePosition.add(this.component.position);
 		
 		this.attached = hp;
@@ -48,7 +48,7 @@ public class Hardpoint {
 		this.component.attachRelativeComponent(
 				hp.component,
 				diff.x, diff.y, 
-	 			requiredRotationDegrees * MathUtils.degreesToRadians);
+	 			requiredRotationDegrees);
 
 		this.attached.slaveAttach(this);
 		

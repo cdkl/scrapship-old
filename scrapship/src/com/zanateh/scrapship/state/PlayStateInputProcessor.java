@@ -109,7 +109,6 @@ public class PlayStateInputProcessor implements InputProcessor {
 
 	public void setShipControl(ShipControl shipControl) {
 		this.shipControl = shipControl;
-		this.shipControl.setInputProcessor(this);
 	}
 
 	public void removeShipControl(ShipControl shipControl) {

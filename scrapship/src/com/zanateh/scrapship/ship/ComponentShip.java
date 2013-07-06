@@ -8,12 +8,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.zanateh.scrapship.camera.IHasPosition;
+import com.zanateh.scrapship.ship.component.IComponent;
 
 public class ComponentShip implements IShip {
 
 	private Body body;
 	
-	private ShipControl control;
+	private ShipControl control = null;
 	
 	private ArrayList<IComponent> components = new ArrayList<IComponent>();
 	
@@ -27,17 +29,11 @@ public class ComponentShip implements IShip {
 		def.linearDamping = 0.2f;
 		
 		body = world.createBody(def);
-		
-		
-		
-//		attachComponent(new PodComponent(), 0, 0, 0);
-//		attachComponent(new PodComponent(), 1, 0, MathUtils.PI);
-//		attachComponent(new PodComponent(), 0, 1, MathUtils.PI/2);
-//		attachComponent(new PodComponent(), 0, 2, MathUtils.PI*1.5f);
+				
 	}
 	
-	public void attachComponent(IComponent component, float x, float y, float rad) {
-		component.attach(this, x, y, rad);
+	public void attachComponent(IComponent component, float x, float y, float deg) {
+		component.attach(this, x, y, deg);
 		components.add(component);
 	}
 
@@ -47,8 +43,9 @@ public class ComponentShip implements IShip {
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
-
+		for(IComponent component : components ) {
+			component.update();
+		}
 	}
 
 	@Override
@@ -59,19 +56,14 @@ public class ComponentShip implements IShip {
 		}
 
 		this.control = control;
-//			this.control.forwardThrusters.add(mainEngine);
-//			this.control.reverseThrusters.add(revEngine);
-//			this.control.leftThrusters.add(leftEngine);
-//			this.control.rightThrusters.add(rightEngine);
-
-
 	}
+	
+	
 
 	@Override
 	public void removeControl() {
 		this.control.remove();
 		this.control = null;
-
 	}
 
 	@Override
@@ -97,6 +89,16 @@ public class ComponentShip implements IShip {
 	@Override
 	public Body getBody() {
 		return body;
+	}
+
+	@Override
+	public Vector2 getPosition() {
+		return body.getTransform().getPosition();
+	}
+
+	@Override
+	public ShipControl getShipControl() {
+		return this.control;
 	}
 
 }

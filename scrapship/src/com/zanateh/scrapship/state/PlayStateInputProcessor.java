@@ -2,16 +2,21 @@ package com.zanateh.scrapship.state;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.zanateh.scrapship.camera.CameraManager;
+import com.zanateh.scrapship.scene.ScrapShipStage;
 import com.zanateh.scrapship.ship.ShipControl;
 
-public class PlayStateInputProcessor implements InputProcessor {
+public class PlayStateInputProcessor extends ScrapShipStage {
 
 	PlayState state;
 	ShipControl shipControl = null;
 	CameraManager cameraManager = null;
 	
-	public PlayStateInputProcessor() {
+	public PlayStateInputProcessor(PlayState state,int width, int height, boolean keepAspect,
+			SpriteBatch spriteBatch) {
+		super(width, height, keepAspect, spriteBatch);
+		this.state = state;
 	}
 	
 	@Override

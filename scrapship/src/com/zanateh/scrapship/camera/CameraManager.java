@@ -56,18 +56,19 @@ public class CameraManager {
 		camera.update();
 		
 		game.getSpriteBatch().setProjectionMatrix(game.getCamera().combined);
-		game.getSpriteBatch().begin();
 	}
 	
 	public void finalizeRender(ScrapShipGame game, World world)
 	{
 		if(getDebugRender()) {
-			game.getSpriteBatch().flush();
+			game.getSpriteBatch().begin();
+
+//			game.getSpriteBatch().flush();
 			debugMatrix = new Matrix4(game.getCamera().combined);
 			debugRenderer.render(world,  debugMatrix);
+			game.getSpriteBatch().end();
+
 		}
-		
-		game.getSpriteBatch().end();
 	}
 
 	public void toggleDebugRender() {

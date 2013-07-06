@@ -25,8 +25,8 @@ public class Hardpoint {
 	
 		// Vector of hardpoint to origin
 		Vector2 rotatedRelativePosition = new Vector2(position);
-		rotatedRelativePosition.rotate(this.component.rotation);
-		rotatedRelativePosition.add(this.component.position);
+		rotatedRelativePosition.rotate(this.component.getRotation());
+		rotatedRelativePosition.add(this.component.getPosition());
 		
 		this.attached = hp;
 

@@ -2,7 +2,6 @@ package com.zanateh.scrapship.ship;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
-import com.zanateh.scrapship.ship.component.BasicThruster;
 import com.zanateh.scrapship.ship.component.ComponentThruster;
 import com.zanateh.scrapship.ship.component.PodComponent;
 
@@ -48,13 +47,18 @@ public class ComponentShipFactory {
 				float enginePower = 5;
 				ComponentThruster mainEngine = comp1.addThruster(new Vector2(-0.5f,0), new Vector2(1,0), enginePower * 1f );
 				ComponentThruster revEngine = comp1.addThruster(new Vector2(0.5f,0), new Vector2(-1,0), enginePower * 0.4f);
-				ComponentThruster leftEngine = comp1.addThruster(new Vector2(0.5f,0), new Vector2(0,1), enginePower * 0.2f);
-				ComponentThruster rightEngine = comp1.addThruster(new Vector2(0.5f,0), new Vector2(0,-1), enginePower * 0.2f);
+				ComponentThruster leftEngineFront = comp1.addThruster(new Vector2(0.5f,0), new Vector2(0,1), enginePower * 0.1f);
+				ComponentThruster rightEngineFront = comp1.addThruster(new Vector2(0.5f,0), new Vector2(0,-1), enginePower * 0.1f);
+				ComponentThruster leftEngineRear = comp1.addThruster(new Vector2(-0.5f,0), new Vector2(0,1), enginePower * 0.1f);
+				ComponentThruster rightEngineRear = comp1.addThruster(new Vector2(-0.5f,0), new Vector2(0,-1), enginePower * 0.1f);
+
 				
 				ShipControl shipControl = new ShipControl();
 				shipControl.forwardThrusters.add(mainEngine);
-				shipControl.leftThrusters.add(leftEngine);
-				shipControl.rightThrusters.add(rightEngine);
+				shipControl.leftThrusters.add(leftEngineFront);
+				shipControl.leftThrusters.add(rightEngineRear);
+				shipControl.rightThrusters.add(rightEngineFront);
+				shipControl.rightThrusters.add(leftEngineRear);
 				shipControl.reverseThrusters.add(revEngine);
 
 				ship.setShipControl(shipControl);

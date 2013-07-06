@@ -45,7 +45,8 @@ public class PlayState extends GameState {
 		inputProcessor = new PlayStateInputProcessor(this);
 		Gdx.input.setInputProcessor(inputProcessor);
 		
-		Ship ship1 = new Ship(world);
+		ComponentShip ship1 = ComponentShipFactory.createShip(
+				ComponentShipFactory.ShipType.PlayerShip, world);
 		ship1.setPosition(new Vector2(0.5f,3.5f));
 		ship1.setVelocity(new Vector2(1,0));
 		shipList.add(ship1);
@@ -58,9 +59,7 @@ public class PlayState extends GameState {
 		ship2.setVelocity(new Vector2(-1,0));
 		shipList.add(ship2);
 		
-		ShipControl control = new ShipControl();
-		inputProcessor.setShipControl(control);
-		ship1.setShipControl(control);
+		inputProcessor.setShipControl(ship1.getShipControl());
 	}
 
 	@Override

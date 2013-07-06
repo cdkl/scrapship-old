@@ -3,22 +3,25 @@ package com.zanateh.scrapship.ship;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.zanateh.scrapship.camera.IHasPosition;
 
-public interface IShip {
+public interface IShip extends IHasPosition {
 
-	public abstract void dispose();
+	public void dispose();
 
-	public abstract void update();
+	public void update();
 
-	public abstract void setShipControl(ShipControl control);
+	public void setShipControl(ShipControl control);
+	
+	public ShipControl getShipControl();
 
-	public abstract void removeControl();
+	public void removeControl();
 
-	public abstract void draw(SpriteBatch batch);
+	public void draw(SpriteBatch batch);
 
-	public abstract void setPosition(Vector2 pos);
+	public void setPosition(Vector2 pos);
 
-	public abstract void setVelocity(Vector2 vel);
+	public void setVelocity(Vector2 vel);
 	
 	public Body getBody();
 

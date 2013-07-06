@@ -2,21 +2,22 @@ package com.zanateh.scrapship.state;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.zanateh.scrapship.camera.CameraManager;
 import com.zanateh.scrapship.ship.ShipControl;
 
 public class PlayStateInputProcessor implements InputProcessor {
 
 	PlayState state;
-	ShipControl shipControl;
+	ShipControl shipControl = null;
+	CameraManager cameraManager = null;
 	
-	public PlayStateInputProcessor(PlayState game) {
-		this.state = game;
+	public PlayStateInputProcessor() {
 	}
 	
 	@Override
 	public boolean keyDown(int keycode) {
 		if( keycode == Input.Keys.D ) {
-			state.toggleDebugRender();
+			if(cameraManager != null ) cameraManager.toggleDebugRender();
 			return true;
 		}
 		
@@ -103,8 +104,8 @@ public class PlayStateInputProcessor implements InputProcessor {
 
 	@Override
 	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
-		return false;
+		if(cameraManager != null ) cameraManager.incrementZoom(amount);
+		return true;
 	}
 
 	public void setShipControl(ShipControl shipControl) {
@@ -115,6 +116,10 @@ public class PlayStateInputProcessor implements InputProcessor {
 		if(this.shipControl == shipControl) {
 			this.shipControl = null;
 		}
+	}
+	
+	public void setCameraManager(CameraManager cameraManager) {
+		this.cameraManager = cameraManager;
 	}
 
 }

@@ -14,35 +14,27 @@ import com.zanateh.scrapship.camera.CameraManager;
 import com.zanateh.scrapship.ship.ComponentShip;
 import com.zanateh.scrapship.ship.ComponentShipFactory;
 import com.zanateh.scrapship.ship.IShip;
-import com.zanateh.scrapship.ship.Ship;
 import com.zanateh.scrapship.ship.ShipControl;
 
 public class PlayState extends GameState {
 
 	private World world;
 	
-	// Debug display stuff for box2d
-	private Matrix4 debugMatrix;
-	Box2DDebugRenderer debugRenderer;
-
 	ArrayList<IShip> shipList = new ArrayList<IShip>();
 	
 	PlayStateInputProcessor inputProcessor;
 	
 	CameraManager cameraManager = new CameraManager();
 	
-	boolean debugRender = false;
-	public boolean getDebugRender() { return debugRender; }
-
 	
 	@Override
 	public void Init(ScrapShipGame game) {
 		super.Init(game);
 
 		world = new World(new Vector2(0,0.0f), false);
-		debugRenderer = new Box2DDebugRenderer();
-		
-		inputProcessor = new PlayStateInputProcessor(this);
+
+		inputProcessor = new PlayStateInputProcessor();
+		inputProcessor.setCameraManager(cameraManager);
 		Gdx.input.setInputProcessor(inputProcessor);
 		
 		ComponentShip ship1 = ComponentShipFactory.createShip(
@@ -110,23 +102,12 @@ public class PlayState extends GameState {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
 		cameraManager.setupRenderCamera(game);
-		game.getSpriteBatch().setProjectionMatrix(game.getCamera().combined);
-		game.getSpriteBatch().begin();
 		
 		for(IShip ship : shipList ) {
 			ship.draw(game.getSpriteBatch());
 		}
-		if(getDebugRender()) {
-			game.getSpriteBatch().flush();
-			debugMatrix = new Matrix4(game.getCamera().combined);
-			debugRenderer.render(world,  debugMatrix);
-		}
 
-		game.getSpriteBatch().end();
-	}
-
-	public void toggleDebugRender() {
-		debugRender =! debugRender;
+		cameraManager.finalizeRender(game, world);
 	}
 
 

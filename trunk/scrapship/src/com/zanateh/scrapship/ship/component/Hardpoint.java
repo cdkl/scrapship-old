@@ -61,8 +61,17 @@ public class Hardpoint {
 	
 	public void detach()
 	{
-		// Not implemented.
-		throw new RuntimeException("Hardpoint detach not implemented");
+		if( this.attached != null ) {
+			this.attached.slaveDetach();
+			this.attached = null;
+		}
+	}
+	
+	public void slaveDetach()
+	{
+		if( this.attached != null ) {
+			this.attached = null;
+		}
 	}
 	
 }

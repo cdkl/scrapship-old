@@ -2,14 +2,16 @@ package com.zanateh.scrapship.ship;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.zanateh.scrapship.camera.IHasPosition;
 import com.zanateh.scrapship.scene.ScrapShipActorGroup;
-import com.zanateh.scrapship.scene.ScrapShipStage;
 import com.zanateh.scrapship.ship.component.PodComponent;
 
 public class ComponentShip extends ScrapShipActorGroup implements IHasPosition {
@@ -18,9 +20,7 @@ public class ComponentShip extends ScrapShipActorGroup implements IHasPosition {
 	
 	private ShipControl control = null;
 	
-	private ArrayList<PodComponent> components = new ArrayList<PodComponent>();
-	
-	public ComponentShip(World world, ScrapShipStage stage)
+	public ComponentShip(World world, Stage stage)
 	{
 		BodyDef def = new BodyDef();
 		def.position.set(0,0);
@@ -89,6 +89,11 @@ public class ComponentShip extends ScrapShipActorGroup implements IHasPosition {
 	
 	public ShipControl getShipControl() {
 		return this.control;
+	}
+
+	public void reactToDetach(PodComponent podComponent, Fixture fixture) {
+		Gdx.app.log("Test", "AboutToReactToDetach");
+		this.body.destroyFixture(fixture);
 	}
 
 }

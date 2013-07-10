@@ -14,8 +14,11 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Transform;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.zanateh.scrapship.scene.ScrapShipActorGroup;
 import com.zanateh.scrapship.ship.ComponentShip;
+import com.zanateh.scrapship.ship.DetachComponentAction;
+import com.zanateh.scrapship.state.DragManager;
 
 public class PodComponent extends ScrapShipActorGroup {
 
@@ -24,11 +27,15 @@ public class PodComponent extends ScrapShipActorGroup {
 	Fixture fixture = null;
 	ComponentShip ship = null;
 	
+	final float radius = 0.5f;
+	
 	private ArrayList<ComponentThruster> thrusters = new ArrayList<ComponentThruster>();
 	
 	private ArrayList<Hardpoint> hardpoints = new ArrayList<Hardpoint>();
 	
 	public PodComponent() {
+		setHeight(radius);
+		setWidth(radius);
 	}
 	
 //	public void act(float delta) {
@@ -60,7 +67,7 @@ public class PodComponent extends ScrapShipActorGroup {
 		
 		FixtureDef fixDef = new FixtureDef();
 		CircleShape shape = new CircleShape();
-		shape.setRadius(0.5f);
+		shape.setRadius(radius);
 		setRotation(deg); // can't rotate a sphere
 		this.setX(posx);
 		this.setY(posy);
@@ -128,6 +135,29 @@ public class PodComponent extends ScrapShipActorGroup {
 
 	public void transformVectorToParent(Vector2 vector) {
 		vector.rotate(this.getRotation());
+	}
+	
+	public void select()
+	{
+		Group parent = getParent();
+		
+		// If parented, tell the parent we're detaching.
+		if(parent != null) {
+			this.detach();
+		}
+		
+		DragManager.setSelected(this);
+	}
+	
+	public void detach()
+	{
+		getParent().addAction(new DetachComponentAction(this, this.getFixture()));
+		Gdx.app.log("Test", "AboutToRemove");
+		this.remove();
+		
+		for(Hardpoint hp : hardpoints) {
+			hp.detach();
+		}
 	}
 	
 }

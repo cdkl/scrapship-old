@@ -1,17 +1,26 @@
 package com.zanateh.scrapship.state;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.zanateh.scrapship.camera.CameraManager;
 import com.zanateh.scrapship.scene.ScrapShipStage;
+import com.zanateh.scrapship.ship.ComponentShip;
+import com.zanateh.scrapship.ship.ComponentShipFactory;
 import com.zanateh.scrapship.ship.ShipControl;
+import com.zanateh.scrapship.ship.component.PodComponent;
+import com.zanateh.scrapship.ship.component.SelectAction;
 
 public class PlayStateInputProcessor extends ScrapShipStage {
 
 	PlayState state;
 	ShipControl shipControl = null;
 	CameraManager cameraManager = null;
+	
+	PodComponent selected = null;
 	
 	public PlayStateInputProcessor(PlayState state,int width, int height, boolean keepAspect,
 			SpriteBatch spriteBatch) {
@@ -84,13 +93,48 @@ public class PlayStateInputProcessor extends ScrapShipStage {
 	}
 
 	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {		
+		Vector2 stageCoords = this.screenToStageCoordinates(new Vector2(screenX, screenY));
+		Actor actor = this.hit(stageCoords.x, stageCoords.y, false);
+
+		if( actor == null ) { 
+			Gdx.app.log("HitTest", "Hit --");
+		}
+		else {
+			Gdx.app.log("HitTest", "Hit " + actor.toString());
+			if( actor instanceof PodComponent ) {
+				PodComponent selectable = ((PodComponent)actor);
+				selectable.select();
+				this.selected = selectable;
+				this.getRoot().addActor(selectable);
+				
+				
+				
+				
+				return true;
+			}
+		}
+		
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		
+		if(this.selected != null ) {
+			
+			// Time to drop the component. Make a new "ship" for it.
+			ComponentShip ship = 
+					state.getShipFactory().createShip(
+							ComponentShipFactory.ShipType.EmptyShip);
+			
+			ship.setPosition(this.screenToStageCoordinates(new Vector2(screenX, screenY)));
+			ship.attachComponent(this.selected, 0, 0, 0);
+			
+			this.selected = null;
+			return true;
+		}
 		// TODO Auto-generated method stub
 		return false;
 	}

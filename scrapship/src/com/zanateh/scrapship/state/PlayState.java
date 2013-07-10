@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.zanateh.scrapship.ScrapShipGame;
 import com.zanateh.scrapship.camera.CameraManager;
 import com.zanateh.scrapship.scene.ScrapShipStage;
@@ -16,10 +17,11 @@ import com.zanateh.scrapship.ship.ComponentShip;
 import com.zanateh.scrapship.ship.ComponentShipFactory;
 import com.zanateh.scrapship.ship.ShipControl;
 
-public class PlayState extends GameState {
+public class PlayState extends GameState implements IWorldSource, IStageSource {
 
 	private World world;
 	PlayStateInputProcessor stage;
+	ComponentShipFactory shipFactory;
 	
 	ArrayList<ComponentShip> shipList = new ArrayList<ComponentShip>();
 	
@@ -29,6 +31,9 @@ public class PlayState extends GameState {
 	@Override
 	public void Init(ScrapShipGame game) {
 		super.Init(game);
+		
+		this.shipFactory = new ComponentShipFactory(this, this);
+		
 
 		world = new World(new Vector2(0,0.0f), false);
 		stage = new PlayStateInputProcessor(this, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, game.getSpriteBatch());
@@ -36,16 +41,16 @@ public class PlayState extends GameState {
 		stage.setCameraManager(cameraManager);
 		Gdx.input.setInputProcessor(stage);
 		
-		ComponentShip ship1 = ComponentShipFactory.createShip(
-				ComponentShipFactory.ShipType.PlayerShip, world, stage);
+		ComponentShip ship1 = shipFactory.createShip(
+				ComponentShipFactory.ShipType.PlayerShip);
 		ship1.setPosition(new Vector2(0.5f,3.5f));
 		ship1.setVelocity(new Vector2(1,0));
 		shipList.add(ship1);
 		cameraManager.setCameraMode(CameraManager.CameraMode.Target);
 		cameraManager.setTarget(ship1);		
 		
-		ComponentShip ship2 = ComponentShipFactory.createShip(
-				ComponentShipFactory.ShipType.DebugShip, world, stage);
+		ComponentShip ship2 = shipFactory.createShip(
+				ComponentShipFactory.ShipType.DebugShip);
 		ship2.setPosition(new Vector2(8,4.4f));
 		ship2.setVelocity(new Vector2(-1,0));
 		shipList.add(ship2);
@@ -53,6 +58,10 @@ public class PlayState extends GameState {
 		stage.setShipControl(ship1.getShipControl());
 	}
 
+	void addShip(ComponentShip ship) {
+		
+	}
+	
 	@Override
 	public void Cleanup() {
 		// TODO Auto-generated method stub
@@ -112,8 +121,19 @@ public class PlayState extends GameState {
 		game.changeState(new PlayState());
 	}
 	
+	@Override
 	public World getWorld() {
 		return world;
+	}
+	
+	@Override
+	public Stage getStage() {
+		return stage;
+	}
+	
+	public ComponentShipFactory getShipFactory()
+	{
+		return this.shipFactory;
 	}
 	
 }

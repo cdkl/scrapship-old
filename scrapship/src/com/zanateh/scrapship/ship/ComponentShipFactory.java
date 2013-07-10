@@ -5,22 +5,33 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.zanateh.scrapship.scene.ScrapShipStage;
 import com.zanateh.scrapship.ship.component.ComponentThruster;
 import com.zanateh.scrapship.ship.component.PodComponent;
+import com.zanateh.scrapship.state.IStageSource;
+import com.zanateh.scrapship.state.IWorldSource;
 
 public class ComponentShipFactory {
 	
+	IWorldSource worldSource;
+	IStageSource stageSource;
+	
+	public ComponentShipFactory( IWorldSource worldSource, IStageSource stageSource ) {
+		this.worldSource = worldSource;
+		this.stageSource = stageSource;
+	}
+	
 	public enum ShipType {
 		DebugShip,
-		PlayerShip
+		PlayerShip,
+		EmptyShip
 	};
 	
-	public static ComponentShip createShip(ShipType shipType, World world, ScrapShipStage stage)
+	public ComponentShip createShip(ShipType shipType) 
 	{
 		ComponentShip ship = null;
 		
 		switch(shipType) {
 		case DebugShip:
 			{
-				ship = new ComponentShip(world, stage);
+				ship = new ComponentShip(worldSource.getWorld(), stageSource.getStage());
 			
 				PodComponent comp1 = new PodComponent();
 				comp1.addHardpoint(new Vector2(0.5f,0));
@@ -40,7 +51,7 @@ public class ComponentShipFactory {
 			break;
 		case PlayerShip:
 			{
-				ship = new ComponentShip(world, stage);
+				ship = new ComponentShip(worldSource.getWorld(), stageSource.getStage());
 				
 				PodComponent comp1 = new PodComponent();
 				ship.attachComponent(comp1, 0, 0, 0);
@@ -76,6 +87,12 @@ public class ComponentShipFactory {
 				
 
 				
+			}
+			break;
+			
+		case EmptyShip:
+			{
+				ship = new ComponentShip(worldSource.getWorld(), stageSource.getStage());
 			}
 			break;
 		}

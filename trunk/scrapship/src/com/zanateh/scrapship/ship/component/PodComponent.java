@@ -18,9 +18,9 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.zanateh.scrapship.scene.ScrapShipActorGroup;
 import com.zanateh.scrapship.ship.ComponentShip;
 import com.zanateh.scrapship.ship.DetachComponentAction;
-import com.zanateh.scrapship.state.DragManager;
+import com.zanateh.scrapship.state.ISelectable;
 
-public class PodComponent extends ScrapShipActorGroup {
+public class PodComponent extends ScrapShipActorGroup implements ISelectable {
 
 	private Sprite sprite;
 	
@@ -137,6 +137,9 @@ public class PodComponent extends ScrapShipActorGroup {
 		vector.rotate(this.getRotation());
 	}
 	
+	boolean isSelected = false;
+	
+	@Override
 	public void select()
 	{
 		Group parent = getParent();
@@ -146,18 +149,28 @@ public class PodComponent extends ScrapShipActorGroup {
 			this.detach();
 		}
 		
-		DragManager.setSelected(this);
+		isSelected=true;
 	}
 	
 	public void detach()
 	{
 		getParent().addAction(new DetachComponentAction(this, this.getFixture()));
 		Gdx.app.log("Test", "AboutToRemove");
+
+		Group root = this.getStage().getRoot();
 		this.remove();
+		root.addActor(this);
 		
 		for(Hardpoint hp : hardpoints) {
 			hp.detach();
 		}
 	}
+
+	@Override
+	public void release() {
+		this.remove();
+		isSelected=false;
+	}
+
 	
 }

@@ -12,13 +12,13 @@ import com.zanateh.scrapship.ship.ComponentShip;
 import com.zanateh.scrapship.ship.ComponentShipFactory;
 import com.zanateh.scrapship.ship.ShipControl;
 import com.zanateh.scrapship.ship.component.PodComponent;
-import com.zanateh.scrapship.ship.component.SelectAction;
 
 public class PlayStateInputProcessor extends ScrapShipStage {
 
 	PlayState state;
 	ShipControl shipControl = null;
 	CameraManager cameraManager = null;
+	SelectionManager selectionManager = new SelectionManager();
 	
 	PodComponent selected = null;
 	
@@ -102,14 +102,11 @@ public class PlayStateInputProcessor extends ScrapShipStage {
 		}
 		else {
 			Gdx.app.log("HitTest", "Hit " + actor.toString());
-			if( actor instanceof PodComponent ) {
-				PodComponent selectable = ((PodComponent)actor);
-				selectable.select();
-				this.selected = selectable;
-				this.getRoot().addActor(selectable);
-				
-				
-				
+			if( actor instanceof ISelectable ) {
+				ISelectable selectable = ((ISelectable)actor);
+				this.touchScreenPos.set(screenX, screenY);
+				selectionManager.setSelectionPosition(this.screenToStageCoordinates(new Vector2(screenX, screenY)));
+				selectionManager.setSelected(selectable);
 				
 				return true;
 			}
@@ -122,7 +119,7 @@ public class PlayStateInputProcessor extends ScrapShipStage {
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		
-		if(this.selected != null ) {
+		if( this.selectionManager.getSelected() != null ) {
 			
 			// Time to drop the component. Make a new "ship" for it.
 			ComponentShip ship = 
@@ -130,9 +127,8 @@ public class PlayStateInputProcessor extends ScrapShipStage {
 							ComponentShipFactory.ShipType.EmptyShip);
 			
 			ship.setPosition(this.screenToStageCoordinates(new Vector2(screenX, screenY)));
-			ship.attachComponent(this.selected, 0, 0, 0);
+			ship.attachComponent(((PodComponent)this.selectionManager.releaseSelected()), 0, 0, 0);
 			
-			this.selected = null;
 			return true;
 		}
 		// TODO Auto-generated method stub
@@ -141,13 +137,24 @@ public class PlayStateInputProcessor extends ScrapShipStage {
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		this.touchScreenPos.set(screenX, screenY);
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
+	public void act(float delta) {
+		super.act(delta);
+		touchScreenTranslatedPos.set(touchScreenPos);
+		selectionManager.setSelectionPosition(this.screenToStageCoordinates(touchScreenTranslatedPos));
+	}
+	
+	Vector2 touchScreenPos = new Vector2(0,0);
+	Vector2 touchScreenTranslatedPos = new Vector2(0,0);
+	
+	@Override
 	public boolean mouseMoved(int screenX, int screenY) {
-		// TODO Auto-generated method stub
+//		touchScreenPos.set(screenX, screenY);
 		return false;
 	}
 

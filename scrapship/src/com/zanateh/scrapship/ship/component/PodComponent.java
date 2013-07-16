@@ -50,7 +50,7 @@ public class PodComponent extends ScrapShipActorGroup implements ISelectable {
 	public void draw(SpriteBatch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
 		
-		Vector2 worldPos = new Vector2(getPosition());
+		Vector2 worldPos = getPosition();
 	
 		sprite.setPosition(worldPos.x - (sprite.getWidth()/2), 
 						   worldPos.y - sprite.getHeight()/2);
@@ -168,8 +168,16 @@ public class PodComponent extends ScrapShipActorGroup implements ISelectable {
 
 	@Override
 	public void release() {
-		this.remove();
 		isSelected=false;
+		
+		Gdx.app.log("Selection", "Firing ReleasedComponent.");
+		this.fire(new ReleasedComponentEvent(getPosition()));
+		
+	}
+
+	public ArrayList<Hardpoint> getHardpoints() {
+		// TODO Auto-generated method stub
+		return this.hardpoints;
 	}
 
 	

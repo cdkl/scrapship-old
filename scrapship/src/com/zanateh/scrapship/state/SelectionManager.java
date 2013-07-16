@@ -2,11 +2,20 @@ package com.zanateh.scrapship.state;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.zanateh.scrapship.ship.ComponentShip;
+import com.zanateh.scrapship.ship.ComponentShipFactory;
+import com.zanateh.scrapship.ship.component.PodComponent;
 
 public class SelectionManager {
 
+	PlayStateInputProcessor proc;
+	
 	ISelectable selectedActor = null;
 	Vector2 selectionPosition = new Vector2(0,0);
+	
+	public SelectionManager(PlayStateInputProcessor proc) {
+		this.proc = proc;
+	}
 	
 	public void setSelected(ISelectable actor)
 	{
@@ -17,8 +26,8 @@ public class SelectionManager {
 	public ISelectable releaseSelected()
 	{
 		ISelectable actor = selectedActor;
-		actor.release();
 		selectedActor = null;
+		actor.release();
 		return actor;
 	}
 	

@@ -18,7 +18,7 @@ public class PlayStateInputProcessor extends ScrapShipStage {
 	PlayState state;
 	ShipControl shipControl = null;
 	CameraManager cameraManager = null;
-	SelectionManager selectionManager = new SelectionManager();
+	SelectionManager selectionManager = new SelectionManager(this);
 	
 	PodComponent selected = null;
 	
@@ -121,13 +121,7 @@ public class PlayStateInputProcessor extends ScrapShipStage {
 		
 		if( this.selectionManager.getSelected() != null ) {
 			
-			// Time to drop the component. Make a new "ship" for it.
-			ComponentShip ship = 
-					state.getShipFactory().createShip(
-							ComponentShipFactory.ShipType.EmptyShip);
-			
-			ship.setPosition(this.screenToStageCoordinates(new Vector2(screenX, screenY)));
-			ship.attachComponent(((PodComponent)this.selectionManager.releaseSelected()), 0, 0, 0);
+			this.selectionManager.releaseSelected();
 			
 			return true;
 		}

@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.zanateh.scrapship.ScrapShipGame;
 import com.zanateh.scrapship.camera.CameraManager;
@@ -16,12 +17,14 @@ import com.zanateh.scrapship.scene.ScrapShipStage;
 import com.zanateh.scrapship.ship.ComponentShip;
 import com.zanateh.scrapship.ship.ComponentShipFactory;
 import com.zanateh.scrapship.ship.ShipControl;
+import com.zanateh.scrapship.ship.component.ComponentJoiner;
 
 public class PlayState extends GameState implements IWorldSource, IStageSource {
 
 	private World world;
 	PlayStateInputProcessor stage;
 	ComponentShipFactory shipFactory;
+	ComponentJoiner componentJoiner;
 	
 	ArrayList<ComponentShip> shipList = new ArrayList<ComponentShip>();
 	
@@ -40,6 +43,10 @@ public class PlayState extends GameState implements IWorldSource, IStageSource {
 		stage.setCamera(game.getCamera());
 		stage.setCameraManager(cameraManager);
 		Gdx.input.setInputProcessor(stage);
+		
+		InputListener listener;
+		
+		componentJoiner = new ComponentJoiner(this, stage);
 		
 		ComponentShip ship1 = shipFactory.createShip(
 				ComponentShipFactory.ShipType.PlayerShip);

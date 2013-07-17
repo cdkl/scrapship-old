@@ -16,6 +16,7 @@ import com.zanateh.scrapship.camera.CameraManager;
 import com.zanateh.scrapship.scene.ScrapShipStage;
 import com.zanateh.scrapship.ship.ComponentShip;
 import com.zanateh.scrapship.ship.ComponentShipFactory;
+import com.zanateh.scrapship.ship.DestroyShipEventListener;
 import com.zanateh.scrapship.ship.ShipControl;
 import com.zanateh.scrapship.ship.component.ComponentJoiner;
 
@@ -37,6 +38,7 @@ public class PlayState extends GameState implements IWorldSource, IStageSource {
 		
 		this.shipFactory = new ComponentShipFactory(this, this);
 		
+		final PlayState eventPlayState = this;
 
 		world = new World(new Vector2(0,0.0f), false);
 		stage = new PlayStateInputProcessor(this, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, game.getSpriteBatch());
@@ -47,6 +49,13 @@ public class PlayState extends GameState implements IWorldSource, IStageSource {
 		InputListener listener;
 		
 		componentJoiner = new ComponentJoiner(this, stage);
+		DestroyShipEventListener dseListener = new DestroyShipEventListener() {
+			public boolean handleDestroyShip(ComponentShip target) {
+				eventPlayState.destroyShip( target );
+				return true;
+			}
+		};
+		stage.getRoot().addListener(dseListener);
 		
 		ComponentShip ship1 = shipFactory.createShip(
 				ComponentShipFactory.ShipType.PlayerShip);
@@ -63,6 +72,15 @@ public class PlayState extends GameState implements IWorldSource, IStageSource {
 		shipList.add(ship2);
 		
 		stage.setShipControl(ship1.getShipControl());
+	}
+
+	protected void destroyShip(ComponentShip target) {
+		if( target != null ) {
+			shipList.remove(target);
+			target.remove();
+			target.dispose();
+		}
+		
 	}
 
 	void addShip(ComponentShip ship) {

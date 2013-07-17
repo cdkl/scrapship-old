@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.zanateh.scrapship.camera.IHasPosition;
 import com.zanateh.scrapship.scene.ScrapShipActorGroup;
@@ -94,6 +95,21 @@ public class ComponentShip extends ScrapShipActorGroup implements IHasPosition {
 	public void reactToDetach(PodComponent podComponent, Fixture fixture) {
 		Gdx.app.log("Test", "AboutToReactToDetach");
 		this.body.destroyFixture(fixture);
+		
+		checkIfNoComponents();
 	}
 
+	public void checkIfNoComponents() {
+		boolean hasComponents = false;
+		for( Actor actor : this.getChildren() ) {
+			if( actor instanceof PodComponent ) {
+				hasComponents = true;
+				break;
+			}
+		}
+		
+		if( !hasComponents ) {
+			this.fire(new DestroyShipEvent());
+		}
+	}
 }
